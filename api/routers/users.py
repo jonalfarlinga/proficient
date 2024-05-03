@@ -1,4 +1,5 @@
 from datetime import timedelta
+from typing import List
 from fastapi import (
     APIRouter,
     Depends,
@@ -20,20 +21,21 @@ router = APIRouter()
 
 @router.get(
     "/api/users",
-    response_model=UserOut
+    response_model=UserOut | List[UserOut]
 )
 async def get_user(
-    username: str,
+    username: str = None,
     repo: UsersRepo = Depends()
-) -> UserOut:
+):
     user = repo.get_user(username)
-    print(user)
     if isinstance(user, DatabaseError):
         logger.error(DatabaseError)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Internal error: " + user.failure,
         )
+    if isinstance(user, list):
+        return user
     if not isinstance(user, UserOut):
         logger.info(f"Could not find user with username: {username}")
         raise HTTPException(

@@ -48,7 +48,7 @@ async def login_for_access_token(
 
 
 @router.get("/token", response_model=UserOut)
-async def read_users_me(
+async def get_token(
     current_user: Annotated[
         UserOut,
         Depends(get_current_active_user)

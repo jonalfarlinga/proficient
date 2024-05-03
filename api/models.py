@@ -15,7 +15,7 @@ class UserOut(BaseModel):
     name: str
 
 
-class UserOutWithPassword(UserIn):
+class UserOutWithPassword(UserOut):
     password: str
 
 

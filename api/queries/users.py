@@ -1,5 +1,5 @@
 from .pool import pool
-from models import DatabaseError, UserIn, UserOut
+from models import DatabaseError, UserIn, UserOut, UserOutWithPassword
 import logging
 
 logger = logging.getLogger(__name__)
@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 class UsersRepo:
     def create_user(self, user: UserIn) -> UserOut | None:
-        print(user)
+        logger.debug(f'Create with data: "{str(user)}"')
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
@@ -29,7 +29,7 @@ class UsersRepo:
                     id = db.fetchone()[0]
                     return UserOut(
                         id=id,
-                        **user.dict()
+                        **user.model_dump()
                     )
         except Exception as e:
             logger.info(":::::::::::::::::::::")
@@ -41,32 +41,8 @@ class UsersRepo:
                 detail=str(e)
             )
 
-    def get_password(self, username: str) -> str:
-        logger.debug(username)
-        try:
-            with pool.connection() as conn:
-                with conn.cursor() as db:
-                    db.execute(
-                        """
-                        SELECT password
-                        FROM users
-                        WHERE username = %s
-                        """,
-                        [username]
-                    )
-                    password = db.fetchone()[0]
-                    return password
-        except Exception as e:
-            logger.info(":::::::::::::::::::::")
-            logger.info(str(e))
-            logger.info(":::::::::::::::::::::")
-            return DatabaseError(
-                failure="Failed to retrieve password",
-                detail=str(e)
-            )
-
-    def get_user(self, username: str):
-        logger.debug(username)
+    def get_user_with_password(self, username: str) -> UserOutWithPassword:
+        logger.debug(f'Get login data from: "{username}"')
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
@@ -79,14 +55,65 @@ class UsersRepo:
                         [username]
                     )
                     user = db.fetchone()
-                    user_out = UserOut(
+                    if not user:
+                        return None
+                    return UserOutWithPassword(
                         id=user[0],
                         email=user[1],
                         username=user[2],
                         name=user[3],
                         password=user[4]
                     )
-                    return user_out
+        except Exception as e:
+            logger.info(":::::::::::::::::::::")
+            logger.info(str(e))
+            logger.info(":::::::::::::::::::::")
+            return DatabaseError(
+                failure="Failed to retrieve password",
+                detail=str(e)
+            )
+
+    def get_user(self, username: str = None):
+        logger.debug(f'Get user data from: "{username}"')
+        sql = ""
+        query_data = []
+        if username is not None:
+            sql = "WHERE username = %s"
+            query_data.append(username)
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    db.execute(
+                        """
+                        SELECT *
+                        FROM users
+                        """ + sql,
+                        query_data
+                    )
+                    if username is not None:
+                        user = db.fetchone()
+                        if not user:
+                            return None
+                        user_out = UserOut(
+                            id=user[0],
+                            email=user[1],
+                            username=user[2],
+                            name=user[3],
+                        )
+                        return user_out
+                    else:
+                        users = db.fetchall()
+                        user_data = []
+                        for user in users:
+                            user_data.append(
+                                UserOut(
+                                    id=user[0],
+                                    email=user[1],
+                                    username=user[2],
+                                    name=user[3],
+                                )
+                            )
+                        return user_data
         except Exception as e:
             logger.info(":::::::::::::::::::::")
             logger.info(str(e))

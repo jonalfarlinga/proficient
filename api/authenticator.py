@@ -36,21 +36,26 @@ class Authenticator:
             password: str,
             users: UsersRepo
     ) -> bool | DatabaseError:
-        user_password = users.get_password(username)
-        verified = pbkdf2_sha256.verify(password, user_password)
+        user_with_password = users.get_user_with_password(username)
+        if not user_with_password:
+            return None
+        verified = pbkdf2_sha256.verify(password, user_with_password.password)
         if verified:
-            return users.get_user(username)
+            return UserOut(**user_with_password.model_dump())
 
 
 def create_access_token(
     data: dict,
     expires_delta: timedelta | None = None
 ):
-    to_encode = {'sub': json.dumps(data["sub"].dict())}
+    to_encode = {'sub': json.dumps(data["sub"].model_dump())}
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+        expire = (
+            datetime.now(timezone.utc) +
+            timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        )
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SIGNING_KEY, algorithm=ALGORITHM)
     return encoded_jwt
@@ -58,7 +63,6 @@ def create_access_token(
 
 async def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)],
-    repo: UsersRepo = Depends()
 ):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
