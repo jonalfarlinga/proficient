@@ -41,8 +41,8 @@ class UsersRepo:
                 detail=str(e)
             )
 
-    def get_user_with_password(self, username: str) -> UserOutWithPassword:
-        logger.debug(f'Get login data from: "{username}"')
+    def get_user_with_password(self, email: str) -> UserOutWithPassword:
+        logger.debug(f'Get login data from: "{email}"')
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
@@ -50,9 +50,9 @@ class UsersRepo:
                         """
                         SELECT *
                         FROM users
-                        WHERE username = %s
+                        WHERE email = %s
                         """,
-                        [username]
+                        [email]
                     )
                     user = db.fetchone()
                     if not user:
@@ -73,13 +73,13 @@ class UsersRepo:
                 detail=str(e)
             )
 
-    def get_user(self, username: str = None):
-        logger.debug(f'Get user data from: "{username}"')
+    def get_user(self, email: str = None):
+        logger.debug(f'Get user data from: "{email}"')
         sql = ""
         query_data = []
-        if username is not None:
-            sql = "WHERE username = %s"
-            query_data.append(username)
+        if email is not None:
+            sql = "WHERE email = %s"
+            query_data.append(email)
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
@@ -90,7 +90,7 @@ class UsersRepo:
                         """ + sql,
                         query_data
                     )
-                    if username is not None:
+                    if email is not None:
                         user = db.fetchone()
                         if not user:
                             return None

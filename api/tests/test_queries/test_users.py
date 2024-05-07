@@ -135,11 +135,10 @@ def test_get_users(database_connection):
 
     # Assert
     assert isinstance(users, list)
-    assert len(users) == 2
+    assert len(users) == 3
 
     for user in users:
         assert isinstance(user, UserOut)
-        assert user.name == "Test User"
         assert not hasattr(user, "password")
 
 
@@ -149,7 +148,7 @@ def test_get_a_user(database_connection):
 
     # Act
     with patch("queries.users.pool", new=database_connection):
-        fetched_user = repo.get_user('testuser')
+        fetched_user = repo.get_user('test@example.com')
 
     # Assert that the user is in the database and its details match
     assert isinstance(fetched_user, UserOut)
@@ -177,7 +176,7 @@ def test_get_user_with_password(database_connection):
 
     # Act
     with patch("queries.users.pool", new=database_connection):
-        fetched_user = repo.get_user_with_password('testuser')
+        fetched_user = repo.get_user_with_password('test@example.com')
 
     # Assert that the user is in the database and its details match
     assert isinstance(fetched_user, UserOutWithPassword)

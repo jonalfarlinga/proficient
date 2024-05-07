@@ -1,6 +1,7 @@
 import pytest
 import testing.postgresql
 from psycopg_pool import ConnectionPool
+from authenticator import authenticator
 
 factory = testing.postgresql.PostgresqlFactory(
     cache_initialized_db=True
@@ -32,6 +33,29 @@ def database_connection():
                     password VARCHAR(255) NOT NULL UNIQUE
                 )
             """)
+
+    with pool.connection() as conn:
+        with conn.cursor() as cursor:
+            # default user
+            cursor.execute(
+                """
+                INSERT INTO users
+                    (
+                    email,
+                    username,
+                    name,
+                    password
+                    )
+                VALUES
+                    (
+                    'test@basic.com',
+                    'John Doe',
+                    'basicuser',
+                    %s
+                    )
+                """,
+                (authenticator.get_hashed_password("pass"),)
+            )
 
     yield pool
 

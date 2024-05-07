@@ -24,10 +24,10 @@ router = APIRouter()
     response_model=UserOut | List[UserOut]
 )
 async def get_user(
-    username: str = None,
+    email: str = None,
     repo: UsersRepo = Depends()
 ):
-    user = repo.get_user(username)
+    user = repo.get_user(email)
     if isinstance(user, DatabaseError):
         logger.error(DatabaseError)
         raise HTTPException(
@@ -37,7 +37,7 @@ async def get_user(
     if isinstance(user, list):
         return user
     if not isinstance(user, UserOut):
-        logger.info(f"Could not find user with username: {username}")
+        logger.info(f"Could not find user with username: {email}")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Could not find user"
