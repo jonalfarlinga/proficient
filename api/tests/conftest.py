@@ -7,14 +7,16 @@ factory = testing.postgresql.PostgresqlFactory(
 )
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(scope="session")
 def database_connection():
     # Use factory to create db
     postgresql = factory()
 
     # parse connection string
     dsn = postgresql.dsn()
-    conn_string = f"postgresql://{dsn['user']}@{dsn['host']}:{dsn['port']}/{dsn['database']}"
+    conn_string = (
+        f"postgresql://{dsn['user']}@{dsn['host']}:{dsn['port']}/{dsn['database']}"  # noqa
+    )
 
     # connect to db and create users table
     pool = ConnectionPool(open=True, conninfo=conn_string)
