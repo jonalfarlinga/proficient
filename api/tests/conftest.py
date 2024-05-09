@@ -49,8 +49,8 @@ def database_connection():
                 VALUES
                     (
                     'test@basic.com',
-                    'John Doe',
                     'basicuser',
+                    'John Doe',
                     %s
                     )
                 """,

@@ -4,6 +4,7 @@ from fastapi import (
     APIRouter,
     Depends,
     HTTPException,
+    Response,
     status
 )
 from fastapi.security import OAuth2PasswordRequestForm
@@ -11,10 +12,10 @@ from models import Token, UserOut
 from queries.users import UsersRepo
 import logging
 from authenticator import (
-    authenticator,
-    get_current_active_user,
+    get_authenticator,
     create_access_token,
-    ACCESS_TOKEN_EXPIRE_MINUTES
+    ACCESS_TOKEN_EXPIRE_MINUTES,
+    get_current_user
 )
 
 logger = logging.getLogger(__name__)
@@ -23,12 +24,16 @@ router = APIRouter()
 
 @router.post("/token")
 async def login_for_access_token(
+    response: Response,
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    repo: UsersRepo = Depends()
+    repo: UsersRepo = Depends(),
+    authenticator=Depends(get_authenticator),
 ) -> Token:
-
+    """
+    "username" is email address
+    """
     user = authenticator.verify_password(
-        form_data.email,
+        form_data.username,
         form_data.password,
         repo
     )
@@ -43,6 +48,7 @@ async def login_for_access_token(
     access_token = create_access_token(
         data={"sub": user}, expires_delta=access_token_expires
     )
+    response.set_cookie("fastapi_token", access_token)
     return Token(access_token=access_token, token_type="bearer")
 
 
@@ -50,7 +56,7 @@ async def login_for_access_token(
 async def get_token(
     current_user: Annotated[
         UserOut,
-        Depends(get_current_active_user)
+        Depends(get_current_user)
     ],
 ):
     return current_user
