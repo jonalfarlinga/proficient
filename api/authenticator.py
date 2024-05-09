@@ -4,7 +4,7 @@ import os
 from typing import Annotated
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from models import UserOut, DatabaseError
+from models import Token, UserOut, DatabaseError
 from queries.users import UsersRepo
 from passlib.hash import pbkdf2_sha256
 from jose import JWTError, jwt
@@ -71,18 +71,16 @@ async def get_current_user(
     )
     try:
         payload = jwt.decode(token, SIGNING_KEY, algorithms=[ALGORITHM])
-        user: str = json.loads(payload.get("sub"))
+        user = UserOut(**json.loads(payload.get("sub")))
         if user is None:
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    return user
-
-
-async def get_current_active_user(
-    current_user: Annotated[UserOut, Depends(get_current_user)],
-):
-    return current_user
+    return Token(
+        access_token=token,
+        token_type="bearer",
+        user=user
+    )
 
 
 authenticator = Authenticator(SIGNING_KEY)

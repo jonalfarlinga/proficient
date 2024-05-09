@@ -1,6 +1,6 @@
 import json
 from unittest.mock import MagicMock, patch
-from authenticator import get_authenticator, get_current_user
+from authenticator import get_authenticator
 from models import UserOut
 from main import app
 from fastapi.testclient import TestClient
@@ -59,10 +59,15 @@ def test_login():
             data=data,
             headers={"Content-Type": "application/x-www-form-urlencoded"}
         )
+
     # Assert
     assert response.status_code == 200
     assert response.headers['content-type'] == "application/json"
-    assert response.json().get('access_token') == "access_token"
+    data = response.json()
+    assert data.get('access_token') == "access_token"
+    assert data.get('token_type') == "bearer"
+    assert data['user']['id'] == 1
+    assert not hasattr(data['user'], 'password')
 
 
 def test_login_wrong_pass():
@@ -116,4 +121,3 @@ def test_login_wrong_email():
 
     # Clean Up
     app.dependency_overrides = {}
-

@@ -1,9 +1,10 @@
 from datetime import timedelta
-from typing import Annotated
+from typing import Annotated, Dict
 from fastapi import (
     APIRouter,
     Depends,
     HTTPException,
+    Request,
     Response,
     status
 )
@@ -25,6 +26,7 @@ router = APIRouter()
 @router.post("/token")
 async def login_for_access_token(
     response: Response,
+    request: Request,
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     repo: UsersRepo = Depends(),
     authenticator=Depends(get_authenticator),
@@ -48,11 +50,11 @@ async def login_for_access_token(
     access_token = create_access_token(
         data={"sub": user}, expires_delta=access_token_expires
     )
-    response.set_cookie("fastapi_token", access_token)
-    return Token(access_token=access_token, token_type="bearer")
+    response.set_cookie("authorization", "Bearer " + access_token)
+    return Token(access_token=access_token, token_type="bearer", user=user)
 
 
-@router.get("/token", response_model=UserOut)
+@router.get("/token", response_model=Token)
 async def get_token(
     current_user: Annotated[
         UserOut,
