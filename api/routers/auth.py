@@ -1,10 +1,9 @@
 from datetime import timedelta
-from typing import Annotated, Dict
+from typing import Annotated
 from fastapi import (
     APIRouter,
     Depends,
     HTTPException,
-    Request,
     Response,
     status
 )
@@ -23,16 +22,27 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-@router.post("/token")
+@router.post("/token", response_model=Token)
 async def login_for_access_token(
     response: Response,
-    request: Request,
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     repo: UsersRepo = Depends(),
     authenticator=Depends(get_authenticator),
-) -> Token:
+):
     """
-    "username" is email address
+    Log in to **PROF**icient teaching tools manager.
+
+    - Submit a multipart form containing:
+      - "username": an email address*,
+      - "password": the associated user password
+    - If successful, the response will be a JSON object containing
+    "access_token", "token_type", and "user" attributes
+    - If the username doesn't match a user, or the password doesn't match the
+    that was found, returns a 401 error
+
+    **NOTE**: username is an OAuth standard form field. Although it is titled
+    username, PROFicient's login is based on the user's email. Users also have
+    a "username" which is not related to the login method.
     """
     user = authenticator.verify_password(
         form_data.username,
@@ -61,4 +71,13 @@ async def get_token(
         Depends(get_current_user)
     ],
 ):
+    """
+    Gets the token for the current user.
+
+    - Submit credentials as a header:
+      - "authorization: "Bearer <token>"
+    - If the token is valid, returns a JSON object containing
+    "access_token", "token_type", and "user" attributes
+    - If the authorization is missing or invalid, returns a 401 error
+    """
     return current_user
