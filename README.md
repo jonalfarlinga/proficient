@@ -4,10 +4,55 @@ This app is a portal to a set of university-teaching focused utilities
 ### CONTENTS
 
 - [Documentation](#documentation)
+  - [Development](#development)
   - [Data Repositories](#data-repositories)
     - [Users Repo](#users-repo)
 
 ## Documentation
+
+### Development
+
+- I wrote this app in JavaScript and Python, using VSCode.
+- The Backend API is built on FastAPI running on a uvicorn server.
+- The Front End is a single-page-app built with Vite-React.
+- The dev environment runs in Docker and the repo is hosted on Github.
+
+<p align="center">
+<img src="./docs/vscode_icon.png" width="40"></img>
+<img src="./docs/javascript_icon.png" width="40"></img>
+<img src="./docs/python_icon.png" width="40"></img>
+<img src="./docs/react_icon.png" width="40"></img>
+<img src="./docs/fastapi.svg" width="40"></img>
+<img src="./docs/docker_icon.png" width="40"></img>
+</p>
+
+**Local deployment**
+
+The repository is built to run using Docker compose.
+
+1. Create a volume called prof-db
+    - `docker volume create prof-db`
+2. Build the docker image using docker compose
+    - `docker-compose build` in the repository directory
+3. Run the docker compose container
+    - `docker-compose run` in the repository directory
+
+The backend runs on `localhost:5200` and the frontend on `localhost:5300`
+
+**Backend Test Environment**
+
+There is also an environment designed for lightweight backend testing.
+
+1. Build a docker image from the `/api` directory
+    - `docker build . -f Dockerfile.test -t proficient-pytest`
+2. Run the docker container from the `/api` directory
+    - `docker run -v "$(pwd):/app" --name proficient-pytest-1 proficient-pytest`
+3. Connect to the container bash
+    - `docker exec -it proficient-pytest-1 bash`
+4. Run pytest from the bash root directory
+    - `python -m pytest tests`
+
+With this process, the backend api can be tested without creating a volume. The database is mocked using an in-memory db provided by [testing.postgresql](https://github.com/tk0miya/testing.postgresql?tab=readme-ov-file#readme).
 
 ### Data Repositories
 
