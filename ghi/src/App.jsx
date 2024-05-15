@@ -8,11 +8,11 @@ function App() {
     return (
       <BrowserRouter>
         <div className="app">
-          <nav className="nav-bar">
-            <ul>
-              <li><Link to="/">Landing Page</Link></li>
-              <li><Link to="/dashboard">Dashboard</Link></li>
-              <li><Link to="/profile">Profile</Link></li>
+          <nav className="navbar nav-pills align-content-start p-3">
+            <ul className="nav flex-column">
+              <li className="nav-item"><Link className="nav-link" to="/">Landing Page</Link></li>
+              <li className="nav-item"><Link className="nav-link" to="/dashboard">Dashboard</Link></li>
+              <li className="nav-item"><Link className="nav-link" to="/profile">Profile</Link></li>
             </ul>
           </nav>
           <main className="main-content">

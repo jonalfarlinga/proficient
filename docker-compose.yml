@@ -7,6 +7,7 @@ services:
       CORS_HOST: "*"
       DATABASE_URL: postgresql://devuser:letmein@db:5432/postgresql
       SIGNING_KEY: dev_key
+      BACKEND_HOST: http://localhost:5200
       LOGGING: DEBUG
       WAIT_HOSTS: db:5432
       PORT: 5200

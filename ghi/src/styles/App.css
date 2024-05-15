@@ -34,9 +34,15 @@
     background-color: #f7f7f7;
     padding: 20px;
     border-bottom: 1px solid #ddd;
+    left: -20px;
+    position:relative;
 }
 
 .content-panel {
     padding: 20px;
     flex-grow: 1;
+}
+
+.active {
+    color: red;
 }
