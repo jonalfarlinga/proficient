@@ -1,5 +1,5 @@
 from datetime import timedelta
-from typing import List
+from typing import Annotated, List
 from fastapi import (
     APIRouter,
     Depends,
@@ -7,12 +7,14 @@ from fastapi import (
     status
 )
 import logging
+
+from fastapi.security import OAuth2PasswordRequestForm
 from authenticator import (
     create_access_token,
     ACCESS_TOKEN_EXPIRE_MINUTES,
     get_authenticator
 )
-from models import DatabaseError, Token, UserIn, UserOut
+from models import DatabaseError, Token, UserIn, UserOut, UserUpdate
 from queries.users import UsersRepo
 
 logger = logging.getLogger(__name__)
@@ -62,7 +64,7 @@ async def get_user(
 def create_user_end(
     user: UserIn,
     repo: UsersRepo = Depends(),
-    authenticator=Depends(get_authenticator)
+    authenticator=Depends(get_authenticator),
 ):
     """
     Creates a new user in the datase.
@@ -83,3 +85,33 @@ def create_user_end(
         data={"sub": user_out}, expires_delta=access_token_expires
     )
     return Token(access_token=access_token, token_type="bearer", user=user_out)
+
+
+@router.update(
+    "/api/users", response_model=UserOut)
+def update_user_end(
+    user: UserUpdate,
+    repo: UsersRepo = Depends(),
+    authenticator=Depends(get_authenticator)
+):
+    """
+
+    """
+    stored_user = authenticator.verify_password(
+        user.email,
+        user.password,
+        repo
+    )
+    if not stored_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    if user.new_email:
+        user.email = user.new_email
+    if user.new_password:
+        user.password = user.new_password
+    user_out = repo.update_user(stored_user.id, user)
+
+    return user_out

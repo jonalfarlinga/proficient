@@ -6,9 +6,23 @@ body {
     background-color: rgb(95, 29, 95);
 }
 
+.form-control {
+    background-color: rgb(190, 190, 190);
+    border-color: rgb(255, 0, 255);
+}
+
+.form-control:focus {
+    background-color: rgb(190, 190, 190);
+}
+
+.form-label {
+    color: white;
+}
+
 .card {
     background-color: teal;
 }
+
 .hero {
     background-image: url('hero.jpg');
     height:500px;
