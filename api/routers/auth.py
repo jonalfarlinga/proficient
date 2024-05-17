@@ -60,7 +60,6 @@ async def login_for_access_token(
     access_token = create_access_token(
         data={"sub": user}, expires_delta=access_token_expires
     )
-    response.set_cookie("authorization", "Bearer " + access_token)
     return Token(access_token=access_token, token_type="bearer", user=user)
 
 
@@ -75,7 +74,7 @@ async def get_token(
     Gets the token for the current user.
 
     - Submit credentials as a header:
-      - "authorization: "Bearer <token>"
+      - "authorization: "Bearer -token-"
     - If the token is valid, returns a JSON object containing
     "access_token", "token_type", and "user" attributes
     - If the authorization is missing or invalid, returns a 401 error

@@ -2,40 +2,47 @@
     width: 100%;
 }
 
+body {
+    background-color: rgb(95, 29, 95);
+}
+
+.card {
+    background-color: teal;
+}
+.hero {
+    background-image: url('hero.jpg');
+    height:500px;
+    max-height: 30vh;
+    background-size:cover;
+    background-position: center;
+    display: grid;
+    border-radius: 2rem;
+    margin: 1rem
+}
+
+.hero > h1 {
+    align-self: end;
+    text-align: center;
+    color: white;
+}
+
 .app {
     display: flex;
     min-height: 100vh;
 }
 
-.nav-bar {
+.navbar {
     background-color: #333;
     color: #fff;
-    padding: 20px;
-}
-
-.nav-bar ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.nav-bar li {
-    padding: 10px;
-    cursor: pointer;
+    padding: 1rem;
+    margin: 1rem;
+    border-radius: 2rem;
 }
 
 .main-content {
     flex: 1 auto;
     display: flex;
     flex-direction: column;
-}
-
-.hero {
-    background-color: #f7f7f7;
-    padding: 20px;
-    border-bottom: 1px solid #ddd;
-    left: -20px;
-    position:relative;
 }
 
 .content-panel {

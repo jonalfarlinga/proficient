@@ -2,10 +2,12 @@
 
 function AppCard({ app }) {
     return (
-        <div className="app-card">
-        <img src={app.image} alt={app.name} />
-        <h3>{app.name}</h3>
-        <a href={app.url}>Visit</a>
+        <div className="card">
+            <img className="card-img-top" src={app.image} alt={app.name} height="100" />
+            <div className="card-body">
+                <h3 className="card-title">{app.name}</h3>
+                <a className="btn btn-warning" href={app.url}>Visit</a>
+            </div>
         </div>
     );
 }

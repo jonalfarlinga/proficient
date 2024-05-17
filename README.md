@@ -28,7 +28,7 @@ This app is a portal to a set of university-teaching focused utilities
 
 **Local deployment**
 
-The repository is built to run using Docker compose.
+The repository is built to run using Docker compose. Sensitive environment variables such as SIGNING_KEY are hard-coded in the `docker-compose.yaml` because it is only used in the dev environment. The live app will use individual containers with secure environment variables.
 
 1. Create a volume called prof-db
     - `docker volume create prof-db`
