@@ -4,7 +4,7 @@ import os
 from typing import Annotated
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from models import UserOut, DatabaseError
+from models import Token, UserOut, DatabaseError
 from queries.users import UsersRepo
 from passlib.hash import pbkdf2_sha256
 from jose import JWTError, jwt
@@ -21,10 +21,10 @@ class Authenticator:
 
     def get_account_data(
             self,
-            username: str,
+            email: str,
             users: UsersRepo
     ) -> UserOut:
-        return users.get(username)
+        return users.get_user(email)
 
     def get_hashed_password(self, password: str) -> str:
         hashed_password = pbkdf2_sha256.hash(password)
@@ -32,11 +32,11 @@ class Authenticator:
 
     def verify_password(
             self,
-            username: str,
+            email: str,
             password: str,
             users: UsersRepo
     ) -> bool | DatabaseError:
-        user_with_password = users.get_user_with_password(username)
+        user_with_password = users.get_user_with_password(email)
         if not user_with_password:
             return None
         verified = pbkdf2_sha256.verify(password, user_with_password.password)
@@ -71,19 +71,20 @@ async def get_current_user(
     )
     try:
         payload = jwt.decode(token, SIGNING_KEY, algorithms=[ALGORITHM])
-        user: str = json.loads(payload.get("sub"))
+        user = UserOut(**json.loads(payload.get("sub")))
         if user is None:
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    return user
-
-
-async def get_current_active_user(
-    current_user: Annotated[UserOut, Depends(get_current_user)],
-):
-    print(current_user)
-    return current_user
+    return Token(
+        access_token=token,
+        token_type="bearer",
+        user=user
+    )
 
 
 authenticator = Authenticator(SIGNING_KEY)
+
+
+def get_authenticator():
+    return authenticator

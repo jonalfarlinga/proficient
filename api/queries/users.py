@@ -6,6 +6,82 @@ logger = logging.getLogger(__name__)
 
 
 class UsersRepo:
+    """
+    Handles the connection to the PostgreSQL `users` table.
+
+    `class queries.users.UsersRepo`
+
+    UsersRepo depends on `queries.pool` and requires a valid `DATABASE_URL`
+    environmental variable.
+
+    - create_user
+      Create a new user in the database.
+      `create_user(user)`
+      EXAMPLE
+      ```python
+      data = UserIn(
+        username="string",
+        email="string"
+        name="string"
+        password="string"
+      )
+      repo = UsersRepo()
+      repo.create_user(data)
+      ```
+      Returns:
+      ```python
+      UserOut(
+        username="string",
+        name="string",
+        email="string",
+        password="string"
+      )
+      ```
+
+    - get_user
+      Retrieve details about a user entry or a list of all users.
+      `get_user(email=None)`
+      EXAMPLE
+      ```
+      user_email = "email"
+      repo = UsersRepo()
+      repo.get_user(user_email))
+      ```
+      Returns:
+      ```python
+      UserOut(
+        id=int,
+        username="string",
+        name="string",
+        email="string",
+      )
+      ```
+      If email is `None`, the function returns a list of all entried in the
+      `users` table as UserOut objects.
+      If email is set, the function returns a single UserOut object.
+      If email is set, but no user is found, the function returns None.
+
+    - get_user_with_password
+    Retrieve details about a user, including the stored hashed password.
+    **WARNING** This function should never be exposed to a user or external
+    app. It is strictly for internal use.
+    `get_user_with_password(user)`
+    EXAMPLE
+    ```
+      user_email = "email"
+      repo = UsersRepo()
+      repo.get_user(user_email)
+      Returns:
+      ```python
+      UserOut(
+        id=int
+        username="string",
+        name="string",
+        email="string",
+        password="string"
+      )
+    ```
+    """
     def create_user(self, user: UserIn) -> UserOut | None:
         logger.debug(f'Create with data: "{str(user)}"')
         try:
@@ -41,8 +117,8 @@ class UsersRepo:
                 detail=str(e)
             )
 
-    def get_user_with_password(self, username: str) -> UserOutWithPassword:
-        logger.debug(f'Get login data from: "{username}"')
+    def get_user_with_password(self, email: str) -> UserOutWithPassword:
+        logger.debug(f'Get login data from: "{email}"')
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
@@ -50,9 +126,9 @@ class UsersRepo:
                         """
                         SELECT *
                         FROM users
-                        WHERE username = %s
+                        WHERE email = %s
                         """,
-                        [username]
+                        [email]
                     )
                     user = db.fetchone()
                     if not user:
@@ -73,13 +149,13 @@ class UsersRepo:
                 detail=str(e)
             )
 
-    def get_user(self, username: str = None):
-        logger.debug(f'Get user data from: "{username}"')
+    def get_user(self, email: str = None):
+        logger.debug(f'Get user data from: "{email}"')
         sql = ""
         query_data = []
-        if username is not None:
-            sql = "WHERE username = %s"
-            query_data.append(username)
+        if email is not None:
+            sql = "WHERE email = %s"
+            query_data.append(email)
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
@@ -90,7 +166,7 @@ class UsersRepo:
                         """ + sql,
                         query_data
                     )
-                    if username is not None:
+                    if email is not None:
                         user = db.fetchone()
                         if not user:
                             return None

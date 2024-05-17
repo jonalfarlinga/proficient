@@ -28,6 +28,7 @@ services:
     ports:
       - 5300:5300
     environment:
+      VITE_BACKEND_HOST: http://localhost:5200
       VITE_API_HOST: http://localhost:5300
   db:
     image: postgres:14.5-bullseye

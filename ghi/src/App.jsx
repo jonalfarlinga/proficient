@@ -1,35 +1,39 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './styles/App.css'
+import './styles/App.css';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import Dashboard from './components/Dashboard.jsx';
+import Profile from './components/Profile.jsx';
+import LandingPage from './components/LandingPage.jsx';
+import { useAuthToken } from './features/tokenSelector.js';
+
 
 function App() {
-  const [count, setCount] = useState(0)
+    const token = useAuthToken()
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    return (
+      <BrowserRouter>
+        <div className="app">
+          <nav className="navbar nav-pills align-content-start p-3">
+            <ul className="nav flex-column">
+              <li className="nav-item"><Link className="nav-link" to="/">Landing Page</Link></li>
+              <li className="nav-item"><Link className="nav-link" to="/dashboard">Dashboard</Link></li>
+              {token && (<li className="nav-item"><Link className="nav-link" to="/profile">Profile</Link></li>)}
+            </ul>
+          </nav>
+          <main className="main-content">
+            <header className="hero">
+              <h1>Title</h1>
+            </header>
+            <section className="content-panel">
+              <Routes>
+                <Route path="/" exact element={<LandingPage />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/profile" element={<Profile />} />
+              </Routes>
+            </section>
+          </main>
+        </div>
+      </BrowserRouter>
+    );
+  }
 
-export default App
+  export default App;
