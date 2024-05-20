@@ -52,7 +52,7 @@ export const profApi = createApi({
                     localStorage.setItem('user', JSON.stringify(data));
                     setToken(data)
                 } catch {
-                    dispatch(clearToken)
+                    dispatch(clearToken())
                 }
             }
         }),
@@ -75,7 +75,53 @@ export const profApi = createApi({
                     localStorage.setItem('user', JSON.stringify(data));
                     setToken(data)
                 } catch {
-                    dispatch(clearToken)
+                    dispatch(clearToken())
+                }
+            }
+        }),
+        updateUser: builder.mutation({
+            query: (data) => {
+                return {
+                    url: '/api/users',
+                    method: 'UPDATE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                    credentials: 'include',
+                }
+            },
+            invalidatesTags: ['User'],
+            async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    localStorage.setItem('user', JSON.stringify(data));
+                    setToken(data)
+                } catch {
+                    dispatch(clearToken())
+                }
+            }
+        }),
+        changePassword: builder.mutation({
+            query: (data) => {
+                return {
+                    url: '/api/users',
+                    method: 'UPDATE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                    credentials: 'include',
+                }
+            },
+            invalidatesTags: ['User'],
+            async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    localStorage.setItem('user', JSON.stringify(data));
+                    setToken(data)
+                } catch {
+                    dispatch(clearToken())
                 }
             }
         })
@@ -86,6 +132,7 @@ export const profApi = createApi({
 export const {
     useGetTokenQuery,
     useLoginMutation,
-    useLogoutMutation,
+    useUpdateUserMutation,
     useSignupMutation,
+    useChangePasswordMutation,
 } = profApi

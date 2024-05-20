@@ -198,3 +198,42 @@ class UsersRepo:
                 failure="Failed to retrieve user",
                 detail=str(e)
             )
+
+    def update_user(self, id: int, user: UserIn) -> UserOut | None:
+        logger.debug(f'Create with data: "{str(user)}"')
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    db.execute(
+                        """
+                        UPDATE users
+                        SET
+                            email = %s,
+                            username = %s,
+                            name = %s,
+                            password = %s
+                        WHERE id = %s
+                        RETURNING id
+                        """,
+                        (
+                            user.email,
+                            user.username,
+                            user.name,
+                            user.password,
+                            id
+                        )
+                    )
+                    id = db.fetchone()[0]
+                    return UserOut(
+                        id=id,
+                        **user.model_dump()
+                    )
+        except Exception as e:
+            logger.info(":::::::::::::::::::::")
+            logger.info(e.pgresult)
+            logger.info(str(e))
+            logger.info(":::::::::::::::::::::")
+            return DatabaseError(
+                failure="Failed to update user",
+                detail=str(e)
+            )

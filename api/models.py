@@ -8,6 +8,11 @@ class UserIn(BaseModel):
     password: str
 
 
+class UserUpdate(UserIn):
+    new_email: str | None = None
+    new_password: str | None = None
+
+
 class UserOut(BaseModel):
     id: int
     email: str

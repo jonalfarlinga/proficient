@@ -60,7 +60,7 @@ function LandingPage() {
       {token ? (
         <div>
           <h2>Welcome, {token.user.name}!</h2>
-          <button onClick={handleLogout}>Logout</button>
+          <button className='btn btn-warning' onClick={handleLogout}>Logout</button>
         </div>
       ) : (
         <>
@@ -68,36 +68,36 @@ function LandingPage() {
           <form>
             {isSignUp && (
               <>
-                <label>
+                <label className='form-label'>
                   Username:
-                  <input type="text" value={username} onChange={(event) => setUsername(event.target.value)} />
+                  <input className='form-control' type="text" value={username} onChange={(event) => setUsername(event.target.value)} />
                 </label>
                 <br />
-                <label>
+                <label className='form-label'>
                   Name:
-                  <input type="text" value={name} onChange={(event) => setName(event.target.value)} />
+                  <input className='form-control' type="text" value={name} onChange={(event) => setName(event.target.value)} />
                 </label>
                 <br />
               </>
             )}
-            <label>
+            <label className='form-label'>
               Email:
-              <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+              <input className='form-control' type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
             </label>
             <br />
-            <label>
+            <label className='form-label'>
               Password:
-              <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+              <input className='form-control' type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
             </label>
             <br />
             {isSignUp && (
-              <button onClick={handleSubmit}>Sign Up</button>
+              <button className='btn btn-warning' onClick={handleSubmit}>Sign Up</button>
             )}
             {!isSignUp && (
-              <button onClick={handleSubmit}>Login</button>
+              <button className='btn btn-warning' onClick={handleSubmit}>Login</button>
             )}
             <br />
-            <button onClick={handleSwitchForm}>
+            <button className='btn btn-warning' onClick={handleSwitchForm}>
               {isSignUp ? 'Already have an account? Login' : 'Create an account'}
             </button>
             {isLoginLoading || isSignupLoading ? (
