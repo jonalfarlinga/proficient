@@ -1,5 +1,5 @@
 from datetime import timedelta
-from typing import Annotated, List
+from typing import List
 from fastapi import (
     APIRouter,
     Depends,
@@ -8,7 +8,6 @@ from fastapi import (
 )
 import logging
 
-from fastapi.security import OAuth2PasswordRequestForm
 from authenticator import (
     create_access_token,
     ACCESS_TOKEN_EXPIRE_MINUTES,

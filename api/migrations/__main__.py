@@ -1,3 +1,5 @@
+# noqa
+
 async def migrate():
     from . import down, up, LATEST, ZERO
     import os
