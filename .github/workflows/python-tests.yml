@@ -25,16 +25,17 @@ jobs:
             python-version: "3.10.11"
         - name: Install dependencies
           run: |
+            sudo apt-get update
+            sudo apt-get install -y postgresql postgresql-contrib
+            sudo systemctl start postgresql.service
+            sudo -u postgres psql -c "CREATE ROLE github WITH LOGIN SUPERUSER CREATEDB CREATEROLE PASSWORD 'password';"
             python -m pip install --upgrade pip
             pip install flake8
-            pip install pytest
             pip install -r requirements.txt
-            apt-get uppdate
-            apt-get install -y postgresql postgresql-contrib
+        - name: Test with pytest and testing.postgresql
+          run: |
+            python -m pytest tests
         - name: Lint with flake8
           run: |
             flake8 . --count --select=E9,F63,F7,F82 --show-source -statistics --exclude .venv
             flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --exclude .venv
-        - name: Test with pytest and testing.postgresql
-          run: |
-            python -m pytest tests
