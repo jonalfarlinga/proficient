@@ -9,8 +9,8 @@ class UserIn(BaseModel):
 
 
 class UserUpdate(UserIn):
-    new_email: str | None
-    new_password: str | None
+    new_email: str | None = None
+    new_password: str | None = None
 
 
 class UserOut(BaseModel):

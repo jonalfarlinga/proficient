@@ -87,7 +87,7 @@ def create_user_end(
     return Token(access_token=access_token, token_type="bearer", user=user_out)
 
 
-@router.update(
+@router.put(
     "/api/users", response_model=UserOut)
 def update_user_end(
     user: UserUpdate,
@@ -95,7 +95,18 @@ def update_user_end(
     authenticator=Depends(get_authenticator)
 ):
     """
+    Updates a user in the database with new data.
 
+    - Submit a JSON body including:
+      - "email": string, must be unique and not null,
+      - "username": string, must be unique and not null,
+      - "name": string, must not be null,
+      - "password": string, must not be null,
+      - "new_password": string, leave null if password is not to be changed,
+      - "new_email": string, leave null if email is not to be changed
+    - The "email" and "password" are checked against users in the database. If
+    a match is found, then the database is updated with the full user data,
+    using "new_email" and "new_password" if they are supplied.
     """
     stored_user = authenticator.verify_password(
         user.email,
@@ -111,7 +122,13 @@ def update_user_end(
     if user.new_email:
         user.email = user.new_email
     if user.new_password:
-        user.password = user.new_password
+        user.password = authenticator.get_hashed_password(user.new_password)
+    else:
+        user.password = authenticator.get_hashed_password(user.password)
     user_out = repo.update_user(stored_user.id, user)
-
+    if isinstance(user_out, DatabaseError):
+        raise HTTPException(
+            status_code=status.HTTP_405_METHOD_NOT_ALLOWED,
+            detail="Failed to update user:\n" + user_out.detail
+        )
     return user_out

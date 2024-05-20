@@ -208,13 +208,12 @@ class UsersRepo:
                         """
                         UPDATE users
                         SET
-                            (email = %s,
+                            email = %s,
                             username = %s,
                             name = %s,
-                            password = %s)
+                            password = %s
                         WHERE id = %s
-                        RETURNING
-                            id
+                        RETURNING id
                         """,
                         (
                             user.email,
