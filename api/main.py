@@ -18,8 +18,7 @@ logger.debug("fastapi")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5300", "http://127.0.0.1:5300"],
-    # ,os.environ["CORS_HOST"]
+    allow_origins=[os.environ["CORS_HOST"]].
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
