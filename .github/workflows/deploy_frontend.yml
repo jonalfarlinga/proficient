@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: action checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install NodeJS
         uses: actions/setup-node@v3
@@ -36,11 +36,6 @@ jobs:
           cd ghi
           npm install
           npm run build
-          cd dist
-          ls
-
-      - name: Checkout
-        uses: actions/checkout@v4
         
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -50,8 +45,6 @@ jobs:
         with:
           name: github-pages
           path: './ghi/dist'
-      - name: check
-        run: pwd
           
       - name: Deploy to GitHub Pages
         id: deployment
