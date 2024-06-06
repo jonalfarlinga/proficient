@@ -1,7 +1,9 @@
 name: Deploy Frontend on Pages
 
 on:
-  push
+  push:
+    branches:
+        main
 
 permissions:
   contents: read
