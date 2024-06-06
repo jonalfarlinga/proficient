@@ -36,6 +36,8 @@ jobs:
           cd ghi
           npm install
           npm run build
+          cd dist
+          ls
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -48,6 +50,8 @@ jobs:
         with:
           name: github-pages
           path: './ghi/dist'
+      - name: check
+        run: pwd
           
       - name: Deploy to GitHub Pages
         id: deployment
