@@ -6,20 +6,17 @@ on:
       - main
 
 jobs:
-    build:
+    release:
         runs-on: ubuntu-latest
-
         steps:
-        - name: Checkout code
-          uses: actions/checkout@v2
-
-        - name: Install dependencies
-          run: pip install -r api/requirements.txt
-
-        - name: Deploy to Heroku
+        - uses: actions/checkout@v2
+          with:
+            fetch-depth: 0
+        - name: login
+          uses: actions/heroku@v1
           env:
             HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-            HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+        - name: set remote
           run: |
             git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
             git subtree push --prefix api heroku main
