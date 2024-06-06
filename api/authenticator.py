@@ -8,11 +8,13 @@ from models import Token, UserOut, DatabaseError
 from queries.users import UsersRepo
 from passlib.hash import pbkdf2_sha256
 from jose import JWTError, jwt
+import logging
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 SIGNING_KEY = os.environ["SIGNING_KEY"]
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
+logger = logging.getLogger(__name__)
 
 
 class Authenticator:
@@ -76,6 +78,7 @@ async def get_current_user(
             raise credentials_exception
     except JWTError:
         raise credentials_exception
+    logger.debug(user)
     return Token(
         access_token=token,
         token_type="bearer",

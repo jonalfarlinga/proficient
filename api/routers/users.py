@@ -83,6 +83,7 @@ def create_user_end(
     access_token = create_access_token(
         data={"sub": user_out}, expires_delta=access_token_expires
     )
+    logger.debug(user_out)
     return Token(access_token=access_token, token_type="bearer", user=user_out)
 
 
