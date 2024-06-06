@@ -1,6 +1,14 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { setToken, clearToken } from '/src/features/authTokenSlice'
 
+const baseUrl = import.meta.env.VITE_BACKEND_HOST;
+
+if (!baseUrl) {
+    console.error('Base URL is not set. Check your environment variables.');
+} else {
+    console.log('Base URL:', baseUrl);
+}
+
 export const profApi = createApi({
     reducerPath: 'profApi',
     baseQuery: fetchBaseQuery({ baseUrl: `${import.meta.env.VITE_BACKEND_HOST}`}),
