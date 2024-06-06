@@ -21,7 +21,7 @@ function App() {
           </nav>
           <main className="main-content">
             <header className="hero">
-              <h1>Title</h1>
+              <h1>The Proficient Professor</h1>
             </header>
             <section className="content-panel">
               <Routes>
