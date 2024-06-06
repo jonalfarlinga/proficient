@@ -91,7 +91,7 @@ export const profApi = createApi({
             query: (data) => {
                 return {
                     url: '/api/users',
-                    method: 'UPDATE',
+                    method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                     },
@@ -114,7 +114,7 @@ export const profApi = createApi({
             query: (data) => {
                 return {
                     url: '/api/users',
-                    method: 'UPDATE',
+                    method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                     },
