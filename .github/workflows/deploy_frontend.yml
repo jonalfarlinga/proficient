@@ -41,12 +41,10 @@ jobs:
         uses: actions/configure-pages@v5
         
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-pages-artifact@v3
         with:
           name: github-pages
           path: './ghi/dist'
-        env:
-          ACTIONS_STEP_DEBUG: true
 
       - name: List uploaded artifacts
         run: |
@@ -58,5 +56,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        env:
-          ACTIONS_STEP_DEBUG: true
