@@ -17,27 +17,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: action checkout
-        uses: actions/checkout@v2
-
-      - name: Install NodeJS
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Build React App
-        run: |
-          cd ghi
-          npm install
-          npm run build
-
-
   deploy:
-    needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -64,6 +44,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
+          name: github-pages
           path: ghi/dist
       - name: Deploy to GitHub Pages
         id: deployment
