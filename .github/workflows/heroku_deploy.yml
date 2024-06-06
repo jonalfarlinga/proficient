@@ -13,7 +13,7 @@ jobs:
           with:
             fetch-depth: 0
         - name: login
-          uses: actions/heroku@main
+          uses: actions/heroku@master
           env:
             HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         - name: set remote
