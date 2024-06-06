@@ -38,7 +38,7 @@ jobs:
         run: |
           cd ghi
           npm install
-          npm run build
+          npm run build --base=/proficient
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
