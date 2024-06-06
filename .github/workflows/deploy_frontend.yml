@@ -40,6 +40,9 @@ jobs:
           npm install
           npm run build
 
+      - name: Add CNAME file
+        run: echo 'www.proficientdr.com' > ghi/dist/CNAME
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
