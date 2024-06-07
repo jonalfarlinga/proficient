@@ -54,44 +54,60 @@ function Profile() {
     <div className="profile">
       <h2>Profile</h2>
       <form>
-        <label className='form-label'>
-          Name:
-          {isEditingName ? (
-            <input className='form-control' type="text" value={name} onChange={(event) => setName(event.target.value)} />
-          ) : (
-            <span>{name}</span>
-          )}
-          <button onClick={(event) => {
-            event.preventDefault();
-            setIsEditingName(!isEditingName);
-          }}>Edit</button>
-        </label>
-        <br />
-        <label className='form-label'>
-          Username:
-          {isEditingUsername ? (
-            <input className='form-control' type="text" value={username} onChange={(event) => setUsername(event.target.value)} />
-          ) : (
-            <span>{username}</span>
-          )}
-          <button onClick={(event) => {
-            event.preventDefault();
-            setIsEditingUsername(!isEditingUsername);
-          }}>Edit</button>
-        </label>
-        <br />
-        <label className='form-label'>
-          Email:
-          {isEditingEmail ? (
-            <input className='form-control' type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
-          ) : (
-            <span>{email}</span>
-          )}
-          <button onClick={(event) => {
-            event.preventDefault();
-            setIsEditingEmail(!isEditingEmail);
-          }}>Edit</button>
-        </label>
+        <div className='container d-flex'>
+          <div className='w-25'>
+            <label className='form-label'>
+              Name:<br/>
+                {isEditingName ? (
+                  <input className='form-control' type="text" value={name} onChange={(event) => setName(event.target.value)} />
+                ) : (
+                  <span>{name}</span>
+                )}
+            </label>
+          </div>
+          <div>
+            <button onClick={(event) => {
+              event.preventDefault();
+              setIsEditingName(!isEditingName);
+            }}>Edit</button>
+          </div>
+        </div>
+        <div className='container d-flex'>
+          <div className='w-25'>
+            <label className='form-label'>
+              Username:<br/>
+                {isEditingUsername ? (
+                  <input className='form-control' type="text" value={username} onChange={(event) => setUsername(event.target.value)} />
+                ) : (
+                  <span>{username}</span>
+                )}
+            </label>
+          </div>
+          <div>
+            <button onClick={(event) => {
+              event.preventDefault();
+              setIsEditingUsername(!isEditingUsername);
+            }}>Edit</button>
+          </div>
+        </div>
+        <div className='container d-flex'>
+          <div className='w-25'>
+            <label className='form-label'>
+              Email:<br/>
+                {isEditingEmail ? (
+                  <input className='form-control' type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+                ) : (
+                  <span>{email}</span>
+                )}
+            </label>
+          </div>
+          <div>
+            <button onClick={(event) => {
+              event.preventDefault();
+              setIsEditingEmail(!isEditingEmail);
+            }}>Edit</button>
+          </div>
+        </div>
         <br />
         <button className='btn btn-warning' onClick={handleUpdateUser}>Update User</button>
         {isUpdateLoading ? (
