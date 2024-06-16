@@ -25,6 +25,10 @@ body {
     background-color: teal;
 }
 
+.card-img-top {
+    height: auto;
+}
+
 .hero {
     background-image: url('/hero.png');
     height:500px;

@@ -11,7 +11,7 @@ import { setToken } from './features/authTokenSlice.js';
 
 
 function App() {
-    const [fetchToken, { data: tokenData, isLoading: isQueryLoading, isError }] = useLazyGetTokenQuery();
+    const [fetchToken, { data: tokenData, isError }] = useLazyGetTokenQuery();
     const token = useAuthToken();
     const dispatch = useDispatch();
 
