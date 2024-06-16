@@ -9,13 +9,13 @@ const tokenSlice = createSlice({
   initialState,
   reducers: {
     setToken: (state, action) => {
-        console.log(state)
       state.token = action.payload;
-      const local_token = {
-        access_token: state.payload.access_token,
-        token_type: action.payload.token_type
-    }
-      localStorage.setItem('token', JSON.stringify(local_token));
+      console.error(state.token)
+      const token_data = {
+          token: state.token.token,
+          token_type: state.token.token_type
+      }
+      localStorage.setItem('token', JSON.stringify(token_data));
     },
     clearToken: (state) => {
       state.token = null;

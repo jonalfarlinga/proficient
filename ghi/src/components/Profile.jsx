@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useUpdateUserMutation, useChangePasswordMutation } from '/src/api/profApi';
-import { useDispatch } from 'react-redux';
 import { useAuthToken } from '/src/features/tokenSelector';
 
 function Profile() {
