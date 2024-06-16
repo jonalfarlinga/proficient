@@ -2,8 +2,8 @@ import AppCard from "./AppCard.jsx";
 
 function Dashboard() {
     const apps = [
-      { name: 'PDiF', image: '...', desc: "A simple utility for diffing PDFs.", url: 'https://pdiff.proficientdr.com' },
-      { name: 'Calends', image: '...', desc: "A syllabus-builder for college classes. Calends builds a calendar for you.", url: 'https://calends.proficientdr.com' },
+      { name: 'PDiF', image: '/pdiff.png', desc: "A simple utility for diffing PDFs.", url: 'https://pdiff.proficientdr.com' },
+      { name: 'Calends', image: '/Calends.webp', desc: "A syllabus-builder for college classes. Calends builds a calendar for you.", url: 'https://calends.proficientdr.com' },
     ];
 
     return (
