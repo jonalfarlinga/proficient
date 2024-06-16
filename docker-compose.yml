@@ -4,7 +4,7 @@ volumes:
 services:
   api:
     environment:
-      CORS_HOST: "http://localhost:5300"
+      CORS_HOST: http://localhost:5300
       DATABASE_URL: postgresql://devuser:letmein@db:5432/postgresql
       SIGNING_KEY: dev_key
       LOGGING: DEBUG
