@@ -24,7 +24,7 @@ body {
 }
 
 .hero {
-    background-image: url('/hero.jpg');
+    background-image: url('/hero.png');
     height:500px;
     max-height: 30vh;
     background-size:cover;
