@@ -9,10 +9,9 @@ const tokenSlice = createSlice({
   initialState,
   reducers: {
     setToken: (state, action) => {
-        console.log(state)
       state.token = action.payload;
       const local_token = {
-        access_token: state.payload.access_token,
+        access_token: action.payload.access_token,
         token_type: action.payload.token_type
     }
       localStorage.setItem('token', JSON.stringify(local_token));

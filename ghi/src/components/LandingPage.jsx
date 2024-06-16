@@ -3,7 +3,7 @@ import { useLoginMutation, useSignupMutation } from '/src/api/profApi';
 import { useDispatch } from 'react-redux';
 import { profApi } from '/src/api/profApi';
 import { useAuthToken } from '../features/tokenSelector';
-import { setToken } from '../features/authTokenSlice';
+import { clearToken, setToken } from '../features/authTokenSlice';
 
 function LandingPage() {
   const dispatch = useDispatch();
@@ -15,31 +15,26 @@ function LandingPage() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [login, { isLoading: isLoginLoading, error: loginError }] = useLoginMutation();
   const [signup, { isLoading: isSignupLoading, error: signupError }] = useSignupMutation();
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (isSignUp) {
-    //   try {
-        const response = await signup({ username, name, email, password })
-        // Handle successful signup
+      const response = await signup({ username, name, email, password })
+      if (response.data) {
         console.log('Signed up successfully');
-        console.log(response)
         dispatch(setToken(response.data))
-    //   } catch (error) {
-    //     // Handle signup error
-    //     console.error('Signup error:', error);
-    //   }
+      } else {
+        console.error('Failed to sign up')
+        console.error(response.error)
+      }
     } else {
-      try {
-        const response = await login({ email, password })
-        // Handle successful login
-        console.log(response)
-        dispatch(setToken(response.data))
-        console.log('Logged in successfully');
-      } catch (error) {
-        // Handle login error
-        console.error('Login error:', error);
+      const response = await login({ email, password })
+        if (response.data) {
+          dispatch(setToken(response.data))
+          console.log('Logged in successfully');
+      } else {
+        console.error('Failed to log up')
+        console.error(response.error)
       }
     }
     setUsername('')
@@ -54,6 +49,7 @@ function LandingPage() {
   const handleLogout = async (event) => {
     event.preventDefault()
     localStorage.removeItem('token');
+    dispatch(clearToken())
     dispatch(profApi.util.invalidateTags('User'))
   };
 
