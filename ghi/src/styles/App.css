@@ -18,14 +18,19 @@ body {
 
 .form-label {
     color: white;
+    width: 20em
 }
 
 .card {
     background-color: teal;
 }
 
+.card-img-top {
+    height: auto;
+}
+
 .hero {
-    background-image: url('/hero.jpg');
+    background-image: url('/hero.png');
     height:500px;
     max-height: 30vh;
     background-size:cover;
@@ -39,10 +44,11 @@ h1,h2,h3 {
     color: #ffc107
 }
 
-.hero > h1 {
-    align-self: end;
-    text-align: center;
+h1 {
+    align-self: center;
     color: white;
+    border-radius: 7px;
+    backdrop-filter: blur(9px);
 }
 
 .app {
@@ -94,4 +100,8 @@ h1,h2,h3 {
 
 span {
     color: #ffc107
+}
+
+.em20 {
+    width: 20em;
 }

@@ -1,68 +1,50 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { setToken, clearToken } from '/src/features/authTokenSlice'
+
 
 const baseUrl = import.meta.env.VITE_BACKEND_HOST;
 
 if (!baseUrl) {
     console.error('Base URL is not set. Check your environment variables.');
-} else {
-    console.log('Base URL:', baseUrl);
 }
 
 export const profApi = createApi({
     reducerPath: 'profApi',
-    baseQuery: fetchBaseQuery({ baseUrl: `${import.meta.env.VITE_BACKEND_HOST}`}),
+    baseQuery: fetchBaseQuery({
+        baseUrl: `${import.meta.env.VITE_BACKEND_HOST}`,
+        prepareHeaders: (headers) => {
+            const token = JSON.parse(localStorage.getItem('token'))
+            if (token) {
+                headers.set(
+                    'authorization',
+                    `${token.token_type} ${token.access_token}`
+                );
+            }
+            return headers;
+        }
+    }),
     tagTypes: ['User'],
     endpoints: (builder) => ({
         getToken: builder.query({
-            query: () => {
-                var token
-                try {
-                    token = JSON.parse(localStorage.getItem('user'));
-                    token = `${token.token_type} ${token.access_token}`;
-                } catch {
-                    token = "";
-                }
-                return {
-                    url: "/token",
-                    headers: {
-                        "authorization": token
-                    }
-                }
-            },
-            providesTags: ['User'],
-            async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-                try {
-                    const { data } = await queryFulfilled;
-                    dispatch(setToken(data.token));
-                } catch {
-                    dispatch(clearToken());
-                }
-            }
-
+            query: () => ({
+                url: '/token',
+                credentials: 'include'
+            }),
+            providesTags: ['User']
         }),
         login: builder.mutation({
-            query: (data) => {
+            query: (form) => {
                 let formData = new FormData()
-                formData.append('username', data.email)
-                formData.append('password', data.password)
+                formData.append('username', form.email)
+                formData.append('password', form.password)
+
                 return {
-                    url: `/token`,
+                    url: '/token',
                     method: 'POST',
-                    body: formData,
-                    credentials: 'include'
+                    credentials: 'include',
+                    body: formData
                 }
             },
-            invalidatesTags: ['User'],
-            async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-                try {
-                    const { data } = await queryFulfilled;
-                    localStorage.setItem('user', JSON.stringify(data));
-                    setToken(data)
-                } catch {
-                    dispatch(clearToken())
-                }
-            }
+            invalidatesTags: ['User']
         }),
         signup: builder.mutation({
             query: (data) => {
@@ -73,25 +55,15 @@ export const profApi = createApi({
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(data),
-                    credentials: 'include',
                 }
             },
-            invalidatesTags: ['User'],
-            async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-                try {
-                    const { data } = await queryFulfilled;
-                    localStorage.setItem('user', JSON.stringify(data));
-                    setToken(data)
-                } catch {
-                    dispatch(clearToken())
-                }
-            }
+            invalidatesTags: ['User']
         }),
         updateUser: builder.mutation({
             query: (data) => {
                 return {
                     url: '/api/users',
-                    method: 'PUT',
+                    method: 'UPDATE',
                     headers: {
                         'Content-Type': 'application/json',
                     },
@@ -99,22 +71,13 @@ export const profApi = createApi({
                     credentials: 'include',
                 }
             },
-            invalidatesTags: ['User'],
-            async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-                try {
-                    const { data } = await queryFulfilled;
-                    localStorage.setItem('user', JSON.stringify(data));
-                    setToken(data)
-                } catch {
-                    dispatch(clearToken())
-                }
-            }
+            invalidatesTags: ['User']
         }),
         changePassword: builder.mutation({
             query: (data) => {
                 return {
                     url: '/api/users',
-                    method: 'PUT',
+                    method: 'UPDATE',
                     headers: {
                         'Content-Type': 'application/json',
                     },
@@ -123,22 +86,12 @@ export const profApi = createApi({
                 }
             },
             invalidatesTags: ['User'],
-            async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-                try {
-                    const { data } = await queryFulfilled;
-                    localStorage.setItem('user', JSON.stringify(data));
-                    setToken(data)
-                } catch {
-                    dispatch(clearToken())
-                }
-            }
-        })
+        }),
     })
-})
-
+});
 
 export const {
-    useGetTokenQuery,
+    useLazyGetTokenQuery,
     useLoginMutation,
     useUpdateUserMutation,
     useSignupMutation,

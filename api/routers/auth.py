@@ -44,6 +44,8 @@ async def login_for_access_token(
     username, PROFicient's login is based on the user's email. Users also have
     a "username" which is not related to the login method.
     """
+    print(form_data.username)
+    print(form_data.password)
     user = authenticator.verify_password(
         form_data.username,
         form_data.password,
@@ -79,4 +81,5 @@ async def get_token(
     "access_token", "token_type", and "user" attributes
     - If the authorization is missing or invalid, returns a 401 error
     """
+    print(current_user)
     return current_user

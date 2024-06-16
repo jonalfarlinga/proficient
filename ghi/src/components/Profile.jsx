@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useUpdateUserMutation, useChangePasswordMutation } from '/src/api/profApi';
-import { useDispatch } from 'react-redux';
 import { useAuthToken } from '/src/features/tokenSelector';
 
 function Profile() {
@@ -55,7 +54,7 @@ function Profile() {
       <h2>Profile</h2>
       <form>
         <div className='container d-flex'>
-          <div className='w-25'>
+          <div className='em20'>
             <label className='form-label'>
               Name:<br/>
                 {isEditingName ? (
@@ -73,7 +72,7 @@ function Profile() {
           </div>
         </div>
         <div className='container d-flex'>
-          <div className='w-25'>
+          <div className='em20'>
             <label className='form-label'>
               Username:<br/>
                 {isEditingUsername ? (
@@ -91,7 +90,7 @@ function Profile() {
           </div>
         </div>
         <div className='container d-flex'>
-          <div className='w-25'>
+          <div className='em20'>
             <label className='form-label'>
               Email:<br/>
                 {isEditingEmail ? (
