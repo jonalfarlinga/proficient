@@ -20,7 +20,7 @@ To get The Proficient Professor working for you, navigate to the [home page](htt
 
 From the Dashboard, you can review the whole Proficient app family, and jump to one with a button click.
 
-A logged in user has access to the Profile page. On this page, you can update your user information by clicking "Edit" next to one or more fields, then clicking "Update". If you want to remove your account, then I'm sad to see you go, but that is available on this page as well.
+A logged in user has access to the Profile page. On this page, you can update your user information by clicking "Edit" next to one or more fields, then clicking "Update". 
 
 ## Documentation
 
