@@ -3,10 +3,24 @@ This app is a portal to a set of university-teaching focused utilities
 
 ### CONTENTS
 
+- [Welcome](#welcome)
+  - [Getting Started](#getting-started)
 - [Documentation](#documentation)
   - [Development](#development)
-  - [Data Repositories](#data-repositories)
+  - [Data Repositories](#data-repository)
     - [Users Repo](#users-repo)
+
+## Welcome!
+
+<img src="./docs/proficient_screenshot.png" width="500" align="center">
+
+### Getting Started
+
+To get The Proficient Professor working for you, navigate to the [home page](https://www.proficientdr.com). If this is your first time, click on "Create an Account". On the sign up page, enter your username, email, and password. The click on "Sign up". This will log you in, and share your session with the Proficient apps (I haven't implemented logged in features yet on the other apps).
+
+From the Dashboard, you can review the whole Proficient app family, and jump to one with a button click.
+
+A logged in user has access to the Profile page. On this page, you can update your user information by clicking "Edit" next to one or more fields, then clicking "Update". 
 
 ## Documentation
 
@@ -54,7 +68,7 @@ There is also an environment designed for lightweight backend testing.
 
 With this process, the backend api can be tested without creating a volume. The database is mocked using an in-memory db provided by [testing.postgresql](https://github.com/tk0miya/testing.postgresql?tab=readme-ov-file#readme).
 
-### Data Repositories
+### Data Repository
 
 Data for PROFicient is stored in a PostgreSQL database. The central entity for the app is the `users` table. PROFicient manages the user status and saved data for the PROFicient extensions, such as Calends.
 

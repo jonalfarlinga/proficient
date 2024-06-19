@@ -6,49 +6,47 @@ body {
     background-color: rgb(95, 29, 95);
 }
 
+h1 {
+    align-self: center;
+    color: white;
+    border-radius: 7px;
+    backdrop-filter: blur(9px);
+}
+
+h2,h3 {
+    color: #ffc107
+}
+
+span {
+    color: #ffc107
+}
+
 .form-control {
     background-color: rgb(190, 190, 190);
     border-color: rgb(255, 0, 255);
-}
-
-.form-control:focus {
+}.form-control:focus {
     background-color: rgb(210, 210, 210);
     box-shadow: 0 0 0 .25rem rgba(255, 100, 255, .25);
-}
-
-.form-label {
+}.form-label {
     color: white;
     width: 20em
 }
 
 .card {
     background-color: teal;
-}
-
-.card-img-top {
+}.card-img-top {
     height: auto;
 }
 
 .hero {
     background-image: url('/hero.png');
-    height:500px;
+    height: 500px;
     max-height: 30vh;
-    background-size:cover;
+    background-size: cover;
     background-position: center;
     display: grid;
     border-radius: 2rem;
     margin: 1rem
-}
-
-h1,h2,h3 {
-    color: #ffc107
-}
-
-h1 {
-    align-self: center;
-    color: white;
-    border-radius: 7px;
-    backdrop-filter: blur(9px);
 }
 
 .app {
@@ -62,7 +60,7 @@ h1 {
 
 .navbar {
     background-color: rgb(190, 190, 190);
-    border:rgb(255, 0, 255) solid 1px;
+    border: rgb(255, 0, 255) solid 1px;
     color: #fff;
     padding: 1rem;
     margin: 1rem;
@@ -73,17 +71,11 @@ h1 {
     color: #ffc107;
     background-color: rgb(112, 112, 112);
     margin: 1px;
-}
-
-.nav-link:hover {
+}.nav-link:hover {
     color: #ffca2c;
-}
-
-.nav-link:visited {
+}.nav-link:visited {
     color: #ffc107;
-}
-
-.nav-link:focus {
+}.nav-link:focus {
     color: rgb(210,210,210);
 }
 
@@ -96,10 +88,6 @@ h1 {
 .content-panel {
     padding: 20px;
     flex-grow: 1;
-}
-
-span {
-    color: #ffc107
 }
 
 .em20 {

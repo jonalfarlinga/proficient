@@ -11,10 +11,9 @@ import { setToken } from './features/authTokenSlice.js';
 
 
 function App() {
-    const [fetchToken, { data: tokenData, isError }] = useLazyGetTokenQuery();
+    const [fetchToken, { data: tokenData, isLoading, isError }] = useLazyGetTokenQuery();
     const token = useAuthToken();
     const dispatch = useDispatch();
-
     useEffect(() => {
       if (localStorage.getItem('token')) {
         fetchToken();
@@ -24,8 +23,10 @@ function App() {
     useEffect(() => {
       if (tokenData && !isError) {
         dispatch(setToken(tokenData));
+      } else if (!isLoading) {
+        localStorage.removeItem('token');
       }
-    }, [tokenData, isError, dispatch]);
+    }, [tokenData, isLoading, isError, dispatch]);
     return (
       <HashRouter>
         <div className="app">

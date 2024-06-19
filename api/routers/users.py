@@ -113,6 +113,8 @@ def update_user_end(
         user.password,
         repo
     )
+    logger.debug("incoming:", user)
+    logger.debug("stored:", stored_user)
     if not stored_user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
