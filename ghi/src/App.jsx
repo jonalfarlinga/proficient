@@ -1,5 +1,5 @@
 import './styles/App.css';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { HashRouter, Routes, Route, Link } from 'react-router-dom';
 import Dashboard from './components/Dashboard.jsx';
 import Profile from './components/Profile.jsx';
 import LandingPage from './components/LandingPage.jsx';
@@ -27,7 +27,7 @@ function App() {
       }
     }, [tokenData, isError, dispatch]);
     return (
-      <BrowserRouter>
+      <HashRouter>
         <div className="app">
           <nav className="navbar nav-pills align-content-start p-3">
             <ul className="nav flex-column">
@@ -51,7 +51,7 @@ function App() {
             </section>
           </main>
         </div>
-      </BrowserRouter>
+      </HashRouter>
     );
   }
 
