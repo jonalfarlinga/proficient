@@ -1,12 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useUpdateUserMutation, useChangePasswordMutation } from '/src/api/profApi';
 import { useAuthToken } from '/src/features/tokenSelector';
+import { useDispatch } from 'react-redux';
+import { clearToken, setToken } from '../features/authTokenSlice';
 
 function Profile() {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
   const token = useAuthToken();
+  useEffect (()=> {
+    if (!token) {
+        navigate('/');
+    }
+  }, [token, navigate]);
   const [name, setName] = useState(token ? token.user.name : '');
   const [username, setUsername] = useState(token ? token.user.username : '');
   const [email, setEmail] = useState(token ? token.user.email : '');
+  const [updatePassword, setUpdatePassword] = useState('')
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
@@ -16,17 +27,53 @@ function Profile() {
   const [updateUser, { isLoading: isUpdateLoading, error: updateError }] = useUpdateUserMutation();
   const [changePassword, { isLoading: isChangePasswordLoading, error: changePasswordError }] = useChangePasswordMutation();
 
+  const resetData = () => {
+    setName(token.user.name);
+    setUsername(token.user.username);
+    setEmail(token.user.email);
+    setUpdatePassword('');
+    setOldPassword('');
+    setNewPassword('');
+    setConfirmNewPassword('');
+    setIsEditingEmail(false);
+    setIsEditingName(false);
+    setIsEditingUsername(false);
+  }
+
+  useEffect(()=> {
+    setName(token ? token.user.name: null);
+    setUsername(token ? token.user.username: null);
+    setEmail(token ? token.user.email: null);
+    setUpdatePassword('');
+    setOldPassword('');
+    setNewPassword('');
+    setConfirmNewPassword('');
+    setIsEditingEmail(false);
+    setIsEditingName(false);
+    setIsEditingUsername(false);
+  }, [token])
+
   const handleUpdateUser = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await updateUser({ name, username, email }).unwrap();
-      // Handle successful user update
+      const response = await updateUser({
+        name,
+        username,
+        email,
+        password: updatePassword
+    }).unwrap()
+      dispatch(setToken({
+        user: response,
+        access_token: token.access_token,
+        token_type: token.token_type,
+    }))
       console.log('User updated successfully');
     } catch (error) {
-      // Handle user update error
-      console.error('User update error:', error);
+      console.log(error)
+      alert(`User update error: ${error.status}\n` + error.data.detail);
     }
+    resetData();
   };
 
   const handleChangePassword = async (event) => {
@@ -38,20 +85,27 @@ function Profile() {
     }
 
     try {
-      const response = await changePassword({ oldPassword, newPassword }).unwrap();
-      // Handle successful password change
-      console.log('Password changed successfully');
+      await changePassword({
+        password: oldPassword,
+        new_password: newPassword,
+        username: token.user.username,
+        name: token.user.name,
+        email: token.user.email,
+      }).unwrap()
+      dispatch(clearToken())
+      alert('Password changed successfully! Please log in with the new password.');
+      navigate('/')
     } catch (error) {
-      // Handle password change error
-      console.error('Password change error:', error);
+      alert(`User update error: ${error.status}\n` + error.data.detail);
     }
   };
-  if (!token) {
-    return (<p>Loading...</p>)
-  }
+
   return (
+    <>
+    { token && (
     <div className="profile">
       <h2>Profile</h2>
+      <h3>Update User Data</h3>
       <form>
         <div className='container d-flex'>
           <div className='em20'>
@@ -99,6 +153,10 @@ function Profile() {
                   <span>{email}</span>
                 )}
             </label>
+            <label className='form-label'>
+                Password:
+              <input className='form-control' type="password" value={updatePassword} onChange={(event) => setUpdatePassword(event.target.value)} required />
+            </label>
           </div>
           <div>
             <button onClick={(event) => {
@@ -119,20 +177,21 @@ function Profile() {
         ) : null}
       </form>
       <hr />
+      <h3>Change Password</h3>
       <form>
         <label className='form-label'>
           Old Password:
-          <input className='form-control' type="password" value={oldPassword} onChange={(event) => setOldPassword(event.target.value)} />
+          <input className='form-control' type="password" value={oldPassword} onChange={(event) => setOldPassword(event.target.value)} required />
         </label>
         <br />
         <label className='form-label'>
           New Password:
-          <input className='form-control' type="password" value={newPassword} onChange={(event) => setNewPassword(event.target.value)} />
+          <input className='form-control' type="password" value={newPassword} onChange={(event) => setNewPassword(event.target.value)} required />
         </label>
         <br />
         <label className='form-label'>
           Confirm New Password:
-          <input className='form-control' type="password" value={confirmNewPassword} onChange={(event) => setConfirmNewPassword(event.target.value)} />
+          <input className='form-control' type="password" value={confirmNewPassword} onChange={(event) => setConfirmNewPassword(event.target.value)} required />
         </label>
         <br />
         <button className='btn btn-warning' onClick={handleChangePassword}>Change Password</button>
@@ -146,6 +205,8 @@ function Profile() {
         ) : null}
       </form>
     </div>
+  )}
+  </>
   );
 }
 

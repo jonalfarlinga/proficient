@@ -200,7 +200,7 @@ class UsersRepo:
             )
 
     def update_user(self, id: int, user: UserIn) -> UserOut | None:
-        logger.debug(f'Create with data: "{str(user)}"')
+        logger.debug(f'Update with data: "{str(user)}"')
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:

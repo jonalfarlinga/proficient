@@ -19,13 +19,13 @@ function LandingPage() {
     event.preventDefault();
 
     if (isSignUp) {
-      const response = await signup({ username, name, email, password })
+      const response = await signup({ username, name, email, password });
       if (response.data) {
         console.log('Signed up successfully');
         dispatch(setToken(response.data))
       } else {
-        console.error('Failed to sign up')
-        console.error(response.error)
+        console.error('Failed to sign up');
+        alert(response.error);
       }
     } else {
       const response = await login({ email, password })
